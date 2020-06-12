@@ -46,6 +46,7 @@ from main_files.helpers.to_db.booking_events.delete_booking_events import delete
 from main_files.helpers.from_db.validates.booking_events.validate_booking_event_id import validate_booking_event_id_from_booking_events
 from main_files.helpers.to_db.booking_events.update_start_time import update_start_time
 from main_files.helpers.to_db.booking_events.update_end_time import update_end_time
+from main_files.helpers.to_db.booking_events.update_description import update_description
 from main_files.helpers.to_db.booking_events.update_reference import update_reference
 from main_files.helpers.to_db.booking_events.update_doctor_id import update_doctor_id
 from main_files.helpers.to_db.booking_events.update_submission_id import update_submission_id
@@ -68,6 +69,13 @@ if __name__ == '__main__':
 def server_create_doctors():
 	cookie = request.cookies.get("_s")
 	ip_addr = flask.request.remote_addr
+
+	name = request.form.get("name")
+	license_code = request.form.get("license_code")
+	license_expiry_date = request.form.get("license_expiry_date")
+	qualification = request.form.get("qualification")
+	qualification_level = request.form.get("qualification_level")
+	create_doctors(name, license_code, license_expiry_date, qualification, qualification_level)
 
 
 
@@ -311,6 +319,12 @@ def server_create_submissions():
 	cookie = request.cookies.get("_s")
 	ip_addr = flask.request.remote_addr
 
+	description = request.form.get("description")
+	age = request.form.get("age")
+	gender = request.form.get("gender")
+	client_email = request.form.get("client_email")
+	create_submissions(description, age, gender, client_email)
+
 
 
 # Delete a entry /row in table "submissions" 
@@ -509,6 +523,9 @@ def server_create_symptoms():
 	cookie = request.cookies.get("_s")
 	ip_addr = flask.request.remote_addr
 
+	description = request.form.get("description")
+	create_symptoms(description)
+
 
 
 # Delete a entry /row in table "symptoms" 
@@ -574,6 +591,10 @@ def server_delete_description_symptoms():
 def server_create_symptom_tag_relations():
 	cookie = request.cookies.get("_s")
 	ip_addr = flask.request.remote_addr
+
+	symptom_id = request.form.get("symptom_id")
+	tag_id = request.form.get("tag_id")
+	create_symptom_tag_relations(symptom_id, tag_id)
 
 
 
@@ -685,6 +706,10 @@ def server_create_doctor_tag_relations():
 	cookie = request.cookies.get("_s")
 	ip_addr = flask.request.remote_addr
 
+	doctor_id = request.form.get("doctor_id")
+	tag_id = request.form.get("tag_id")
+	create_doctor_tag_relations(doctor_id, tag_id)
+
 
 
 # Delete a entry /row in table "doctor_tag_relations" 
@@ -795,6 +820,9 @@ def server_create_tags():
 	cookie = request.cookies.get("_s")
 	ip_addr = flask.request.remote_addr
 
+	tag_name = request.form.get("tag_name")
+	create_tags(tag_name)
+
 
 
 # Delete a entry /row in table "tags" 
@@ -860,6 +888,14 @@ def server_delete_tag_name_tags():
 def server_create_booking_events():
 	cookie = request.cookies.get("_s")
 	ip_addr = flask.request.remote_addr
+
+	start_time = request.form.get("start_time")
+	end_time = request.form.get("end_time")
+	description = request.form.get("description")
+	reference = request.form.get("reference")
+	doctor_id = request.form.get("doctor_id")
+	submission_id = request.form.get("submission_id")
+	create_booking_events(start_time, end_time, description, reference, doctor_id, submission_id)
 
 
 
@@ -950,6 +986,50 @@ def server_update_end_time_booking_events():
 # Delete record of "end_time" in table "booking_events" 
 @app.route("/booking_events/delete/end_time/", methods=["DELETE"])
 def server_delete_end_time_booking_events():
+	cookie = request.cookies.get("_s")
+	ip_addr = flask.request.remote_addr
+	token = request.form.get('token')
+	booking_event_id = request.form.get('booking_event_id')
+	if (validate_booking_event_id_from_booking_events(booking_event_id) == False):
+		return dumps({'_error':'booking_event_id is invalid'})
+	return dumps({})
+
+
+
+# Get record of "description" in table "booking_events" 
+@app.route("/booking_events/select/description/", methods=["GET"])
+def server_select_description_booking_events():
+	cookie = request.cookies.get("_s")
+	ip_addr = flask.request.remote_addr
+	token = request.args.get('token')
+
+
+
+# Create record of "description" in table "booking_events" 
+@app.route("/booking_events/insert/description/", methods=["POST"])
+def server_insert_description_booking_events():
+	cookie = request.cookies.get("_s")
+	ip_addr = flask.request.remote_addr
+	token = request.form.get('token')
+
+
+
+# Change record of "description" in table "booking_events" 
+@app.route("/booking_events/update/description/", methods=["PUT"])
+def server_update_description_booking_events():
+	cookie = request.cookies.get("_s")
+	ip_addr = flask.request.remote_addr
+	token = request.form.get('token')
+	booking_event_id = request.form.get('booking_event_id')
+	if (validate_booking_event_id_from_booking_events(booking_event_id) == False):
+		return dumps({'_error':'booking_event_id is invalid'})
+	return dumps({})
+
+
+
+# Delete record of "description" in table "booking_events" 
+@app.route("/booking_events/delete/description/", methods=["DELETE"])
+def server_delete_description_booking_events():
 	cookie = request.cookies.get("_s")
 	ip_addr = flask.request.remote_addr
 	token = request.form.get('token')

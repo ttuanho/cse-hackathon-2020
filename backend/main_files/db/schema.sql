@@ -117,7 +117,7 @@ create table booking_events (
     booking_event_id bigint,
     start_time varchar(20),
     end_time varchar(20),
-    description(1000),
+    description varchar(1000),
     reference varchar(2000), -- ie video url
 
     doctor_id bigint,
